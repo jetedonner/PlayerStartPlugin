@@ -1,4 +1,4 @@
-// Copyright (c.) 1991 - 2022 kimhauser.ch, DaVe Inc. All rights reserved.
+// Copyright (c.) 2022 kimhauser.ch, DaVe Inc. (Kim David Hauser) - All rights reserved.
 
 
 #include "PlayerStartWorldSettings.h"

@@ -1,19 +1,6 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright (c.) 2022 kimhauser.ch, DaVe Inc. (Kim David Hauser) - All rights reserved.
 
 #pragma once
-
-//#include "CoreMinimal.h"
-//#include "Modules/ModuleManager.h"
-//
-//class FPlayerStartPluginModule : public IModuleInterface
-//{
-//public:
-//
-//	/** IModuleInterface implementation */
-//	virtual void StartupModule() override;
-//	virtual void ShutdownModule() override;
-//};
-
 
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
@@ -28,6 +15,6 @@ public:
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
     
-    void OnLevelActorAdded(AActor* AddedActor);
-    void OnLevelActorDeleted(AActor* DeletedActor);
+//    void OnLevelActorAdded(AActor* AddedActor);
+//    void OnLevelActorDeleted(AActor* DeletedActor);
 };

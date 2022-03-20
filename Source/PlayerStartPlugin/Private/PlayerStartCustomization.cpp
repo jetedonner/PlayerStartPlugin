@@ -1,4 +1,4 @@
-// Copyright (c.) 1991 - 2022 kimhauser.ch, DaVe Inc. All rights reserved.
+// Copyright (c.) 2022 kimhauser.ch, DaVe Inc. (Kim David Hauser) - All rights reserved.
 
 
 //#include "PlayerStartCustomization.h"
@@ -10,7 +10,6 @@
 #include "Widgets/SNullWidget.h"
 #include "Widgets/Text/STextBlock.h"
 #include "Widgets/Input/SButton.h"
-#include "Widgets/Input/STextComboBox.h"
 #include "Widgets/SBoxPanel.h"
 //#include "Widgets/SAssetPickerButton.h"
 #include "Internationalization/Text.h"
@@ -32,28 +31,6 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
     PlayerStartProperty = DetailBuilder.GetProperty(GET_MEMBER_NAME_CHECKED(APlayerStartWorldSettings, DefaultPlayerStartTag), APlayerStartWorldSettings::StaticClass());
     
     DetailBuilder.HideProperty(PlayerStartProperty);
-    
-//    TArray<AActor*> ActorsToFind;
-//
-//    if(UWorld* World = GEditor->GetEditorWorldContext().World())
-//    {
-//        UGameplayStatics::GetAllActorsOfClass(GEditor->GetEditorWorldContext().World(), APlayerStart::StaticClass(), ActorsToFind);
-//
-//        for (AActor* PlayerStartActor: ActorsToFind)
-//        {
-//            APlayerStart* PlayerStartCast = Cast<APlayerStart>(PlayerStartActor);
-//            if (PlayerStartCast)
-//            {
-//                UE_LOG(LogTemp, Log, TEXT("PlayerStart Found %s"), *PlayerStartCast->GetActorLabel());//PlayerStartTag.ToString());
-//
-//                TSharedPtr<FString> PlayerStartSharedRef = MakeShared<FString>(FString(PlayerStartCast->GetActorLabel()));//PlayerStartTag.ToString()));
-//
-//                ComboBoxOptions.Add(PlayerStartSharedRef);
-//
-////                FirstPlayerStart = Cast<AActor>(PlayerStartCast);
-//            }
-//        }
-//    }
     
     this->ReloadPlayerStarts();
     
@@ -82,7 +59,8 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
         .VAlign(VAlign_Center)
         .MaxDesiredWidth(250)
         [
-            SNew(STextComboBox)
+            //SNew(STextComboBox)
+            SAssignNew(PlayerStartComboBox, STextComboBox)
             .Font(IDetailLayoutBuilder::GetDetailFont())
             .OptionsSource(&ComboBoxOptions)
             .InitiallySelectedItem(CurrentPlayerStartSharedRef)
@@ -110,22 +88,39 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
             ]
         ];
     
-//    if (GEngine)
-//    {
-//        GEngine->OnLevelActorAdded().AddRaw(this, &FPlayerStartCustomization::OnLevelActorAdded);
-//        
-//        GEngine->OnLevelActorDeleted().AddRaw(this, &FPlayerStartCustomization::OnLevelActorDeleted);
-//    }
+    if (GEngine)
+    {
+        GEngine->OnLevelActorAdded().AddRaw(this, &FPlayerStartCustomization::OnLevelActorAdded);
+        
+        GEngine->OnLevelActorDeleted().AddRaw(this, &FPlayerStartCustomization::OnLevelActorDeleted);
+    }
+}
+
+void FPlayerStartCustomization::OnLevelActorAdded(AActor* AddedActor)
+{
+    TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
+    GLog->Log("Actor ADDED - CUSTOMIZATION!");
+    this->ReloadPlayerStarts();
+    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
+}
+
+void FPlayerStartCustomization::OnLevelActorDeleted(AActor* DeletedActor)
+{
+    TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
+    GLog->Log("Actor DELETED - CUSTOMIZATION!");
+    this->ReloadPlayerStarts();
+    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
 }
 
 void FPlayerStartCustomization::ReloadPlayerStarts()
 {
     GLog->Log("Reload PlayerStarts!");
     
-    TArray<AActor*> ActorsToFind;
-    
     if(UWorld* World = GEditor->GetEditorWorldContext().World())
     {
+        ComboBoxOptions.Empty();
+        
+        TArray<AActor*> ActorsToFind;
         UGameplayStatics::GetAllActorsOfClass(GEditor->GetEditorWorldContext().World(), APlayerStart::StaticClass(), ActorsToFind);
         
         for (AActor* PlayerStartActor: ActorsToFind)
@@ -141,16 +136,10 @@ void FPlayerStartCustomization::ReloadPlayerStarts()
             }
         }
     }
-}
-
-void FPlayerStartCustomization::OnLevelActorAdded(AActor* AddedActor)
-{
-    GLog->Log("Actor ADDED - CUSTOMIZATION!");
-}
-
-void FPlayerStartCustomization::OnLevelActorDeleted(AActor* DeletedActor)
-{
-    GLog->Log("Actor DELETED - CUSTOMIZATION!");
+    if(PlayerStartComboBox)
+    {
+        PlayerStartComboBox->RefreshOptions();
+    }
 }
 
 FReply FPlayerStartCustomization::ClickedOnButton()
@@ -194,8 +183,15 @@ FReply FPlayerStartCustomization::ClickedOnButton()
 
 void FPlayerStartCustomization::OnPlayerStartChanged(TSharedPtr<FString> NewValue, ESelectInfo::Type SelectInfo)
 {
-    FString FSNewValue = *NewValue;
-    PlayerStartProperty->SetValue(static_cast<FString>(FSNewValue));
-    
-    UE_LOG(LogTemp, Log, TEXT("PlayerStart Selected: %s"), *FSNewValue);
+    if(NewValue)
+    {
+        FString FSNewValue = *NewValue;
+        PlayerStartProperty->SetValue(static_cast<FString>(FSNewValue));
+        
+        UE_LOG(LogTemp, Log, TEXT("PlayerStart Selected: %s"), *FSNewValue);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Log, TEXT("PlayerStart Selected: EMPTY!!"));
+    }
 }

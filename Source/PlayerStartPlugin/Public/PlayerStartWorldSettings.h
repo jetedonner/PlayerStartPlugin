@@ -1,4 +1,4 @@
-// Copyright (c.) 1991 - 2022 kimhauser.ch, DaVe Inc. All rights reserved.
+// Copyright (c.) 2022 kimhauser.ch, DaVe Inc. (Kim David Hauser) - All rights reserved.
 
 #pragma once
 
@@ -23,18 +23,3 @@ public:
     FString DefaultPlayerStartTag;
 
 };
-
-///**
-// *
-// */
-//class PLAYERSTARTPLUGIN_API PlayerStartWorldSettings
-//{
-//public:
-//	PlayerStartWorldSettings();
-//	~PlayerStartWorldSettings();
-//
-//public:
-//
-//    UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="PlayerStart", meta=(AllowPrivateAccess = "true"))
-//    FString DefaultPlayerStartTag;
-//};

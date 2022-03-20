@@ -1,4 +1,4 @@
-// Copyright (c.) 2022 by kimhauser.ch (Kim David Hauser), Inc. All Rights Reserved.
+// Copyright (c.) 2022 kimhauser.ch, DaVe Inc. (Kim David Hauser) - All rights reserved.
 
 #include "PlayerStartPlugin.h"
 
@@ -13,34 +13,19 @@ void FPlayerStartPluginModule::StartupModule()
     
     //Register the custom details panel we have created
     PropertyModule.RegisterCustomClassLayout(APlayerStartWorldSettings::StaticClass()->GetFName(), FOnGetDetailCustomizationInstance::CreateStatic(&FPlayerStartCustomization::MakeInstance));
-    
-    if (GEngine)
-    {
-        GLog->Log("GEngine is NOT NULL - MODULE!");
-        GEngine->OnLevelActorAdded().AddRaw(*PropertyModule, &FPlayerStartCustomization::OnLevelActorAdded);
-        
-        GEngine->OnLevelActorDeleted().AddRaw(*PropertyModule, &FPlayerStartCustomization::OnLevelActorDeleted);
-    }
-    else
-    {
-        GLog->Log("GEngine IS NULL - MODULE!");
-    }
-}
-
-void FPlayerStartPluginModule::OnLevelActorAdded(AActor* AddedActor)
-{
-    GLog->Log("Actor ADDED - MODULE!");
-}
-
-void FPlayerStartPluginModule::OnLevelActorDeleted(AActor* DeletedActor)
-{
-    GLog->Log("Actor DELETED - MODULE!");
 }
 
 void FPlayerStartPluginModule::ShutdownModule()
 {
     // Put your module termination code here
     UE_LOG(LogTemp, Warning, TEXT("FPlayerStartPluginModule module has shutdown!"));
+    
+    if(FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
+    {
+        auto& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
+
+        PropertyModule.UnregisterCustomClassLayout(APlayerStartWorldSettings::StaticClass()->GetFName());
+    }
 }
 
 #undef LOCTEXT_NAMESPACE

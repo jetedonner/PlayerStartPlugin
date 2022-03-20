@@ -11,6 +11,7 @@
 #include "Engine/Engine.h"
 #include "LevelEditor.h"
 #include "Editor.h"
+#include "SlateBasics.h"
 #include "Widgets/Input/STextComboBox.h"
 #include "PlayerStartWorldSettings.h"
 #include "IDetailCustomization.h"
@@ -26,6 +27,8 @@ public:
     
     // IDetailCustomization interface
     virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
+    
+    void InitializeWidgets();
     
     void OnPlayerStartChanged(TSharedPtr<FString> NewValue, ESelectInfo::Type SelectInfo);
     

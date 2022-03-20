@@ -96,12 +96,44 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
     }
 }
 
+BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION;
+void FPlayerStartCustomization::InitializeWidgets()
+{
+//    check(FAsyncCompiler::Get() != nullptr);
+    // Create the core list
+//    const auto& cores = FAsyncCompiler::Get()->GetCores();
+//    check(cores.Num() > 0);
+//    for (const auto& core : cores)
+//    {
+//        CoreNames.Add(MakeShareable(new FString(core->GetName())));
+//    }
+//    SelectedCore = &cores[0].Get();
+//    UpdateRevisionList();
+}
+END_SLATE_FUNCTION_BUILD_OPTIMIZATION;
+
 void FPlayerStartCustomization::OnLevelActorAdded(AActor* AddedActor)
 {
     TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
     GLog->Log("Actor ADDED - CUSTOMIZATION!");
     this->ReloadPlayerStarts();
-    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
+//    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
+    
+    FString PlayerStartTagSetting;
+    PlayerStartProperty->GetValue(PlayerStartTagSetting);
+    
+    TSharedPtr<FString> CurrentPlayerStartSharedRef;
+    for(TSharedPtr<FString> item : ComboBoxOptions)
+    {
+        FString FSItem = *item;
+        if(FSItem.Equals(*SelPlayerStart, ESearchCase::CaseSensitive))
+        {
+            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s - ADD"), *PlayerStartTagSetting);
+//            CurrentPlayerStartSharedRef = item;
+            PlayerStartComboBox->SetSelectedItem(item);
+            break;
+        }
+    }
 }
 
 void FPlayerStartCustomization::OnLevelActorDeleted(AActor* DeletedActor)
@@ -109,7 +141,23 @@ void FPlayerStartCustomization::OnLevelActorDeleted(AActor* DeletedActor)
     TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
     GLog->Log("Actor DELETED - CUSTOMIZATION!");
     this->ReloadPlayerStarts();
-    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
+//    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
+    
+    FString PlayerStartTagSetting;
+    PlayerStartProperty->GetValue(PlayerStartTagSetting);
+    
+    TSharedPtr<FString> CurrentPlayerStartSharedRef;
+    for(TSharedPtr<FString> item : ComboBoxOptions)
+    {
+        FString FSItem = *item;
+        if(FSItem.Equals(*SelPlayerStart, ESearchCase::CaseSensitive))
+        {
+            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s - ADD"), *PlayerStartTagSetting);
+//            CurrentPlayerStartSharedRef = item;
+            PlayerStartComboBox->SetSelectedItem(item);
+            break;
+        }
+    }
 }
 
 void FPlayerStartCustomization::ReloadPlayerStarts()

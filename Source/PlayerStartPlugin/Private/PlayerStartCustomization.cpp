@@ -90,10 +90,18 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
     
     if (GEngine)
     {
+        UE_LOG(LogTemp, Log, TEXT("Setting up Actor-Delagates"));
         GEngine->OnLevelActorAdded().AddRaw(this, &FPlayerStartCustomization::OnLevelActorAdded);
         
         GEngine->OnLevelActorDeleted().AddRaw(this, &FPlayerStartCustomization::OnLevelActorDeleted);
+        
+        FDelegateHandle Handle = FEditorDelegates::OnNewActorsDropped.AddRaw(this, &FPlayerStartCustomization::OnNewActorsDropped);
     }
+    
+//    if (GEditor)
+//    {
+//        GEditor->OnNewActorsDropped.AddDynamic(this, &FPlayerStartCustomization::OnNewActorsDropped);
+//    }
 }
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION;
@@ -114,32 +122,58 @@ END_SLATE_FUNCTION_BUILD_OPTIMIZATION;
 
 void FPlayerStartCustomization::OnLevelActorAdded(AActor* AddedActor)
 {
-    TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
-    GLog->Log("Actor ADDED - CUSTOMIZATION!");
-    this->ReloadPlayerStarts();
-//    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
-    
-    FString PlayerStartTagSetting;
-    PlayerStartProperty->GetValue(PlayerStartTagSetting);
-    
-    TSharedPtr<FString> CurrentPlayerStartSharedRef;
-    for(TSharedPtr<FString> item : ComboBoxOptions)
-    {
-        FString FSItem = *item;
-        if(FSItem.Equals(*SelPlayerStart, ESearchCase::CaseSensitive))
-        {
-            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s - ADD"), *PlayerStartTagSetting);
-//            CurrentPlayerStartSharedRef = item;
-            PlayerStartComboBox->SetSelectedItem(item);
-            break;
-        }
-    }
+//    TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
+//    GLog->Log("Actor ADDED - CUSTOMIZATION!");
+//    this->ReloadPlayerStarts();
+////    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
+//
+//    FString PlayerStartTagSetting;
+//    PlayerStartProperty->GetValue(PlayerStartTagSetting);
+//
+//    TSharedPtr<FString> CurrentPlayerStartSharedRef;
+//    for(TSharedPtr<FString> item : ComboBoxOptions)
+//    {
+//        FString FSItem = *item;
+//        if(FSItem.Equals(*SelPlayerStart, ESearchCase::CaseSensitive))
+//        {
+//            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s - ADD"), *PlayerStartTagSetting);
+////            CurrentPlayerStartSharedRef = item;
+//            PlayerStartComboBox->SetSelectedItem(item);
+//            break;
+//        }
+//    }
 }
 
 void FPlayerStartCustomization::OnLevelActorDeleted(AActor* DeletedActor)
 {
+//    TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
+//    GLog->Log("Actor DELETED - CUSTOMIZATION!");
+//    this->ReloadPlayerStarts();
+////    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
+//
+//    FString PlayerStartTagSetting;
+//    PlayerStartProperty->GetValue(PlayerStartTagSetting);
+//
+//    TSharedPtr<FString> CurrentPlayerStartSharedRef;
+//    for(TSharedPtr<FString> item : ComboBoxOptions)
+//    {
+//        FString FSItem = *item;
+//        if(FSItem.Equals(*SelPlayerStart, ESearchCase::CaseSensitive))
+//        {
+//            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s - ADD"), *PlayerStartTagSetting);
+////            CurrentPlayerStartSharedRef = item;
+//            PlayerStartComboBox->SetSelectedItem(item);
+//            break;
+//        }
+//    }
+}
+
+void FPlayerStartCustomization::OnNewActorsDropped(const TArray<UObject*>&, const TArray<AActor*>&)
+{
+    GLog->Log("OnNewActorsDropped - CUSTOMIZATION!");
+    
     TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
-    GLog->Log("Actor DELETED - CUSTOMIZATION!");
+    GLog->Log("Actor ADDED - CUSTOMIZATION!");
     this->ReloadPlayerStarts();
 //    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
     

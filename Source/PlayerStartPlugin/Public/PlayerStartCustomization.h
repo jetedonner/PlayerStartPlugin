@@ -36,6 +36,7 @@ public:
     
     void OnLevelActorAdded(AActor* AddedActor);
     void OnLevelActorDeleted(AActor* DeletedActor);
+    void OnNewActorsDropped(const TArray<UObject*>&, const TArray<AActor*>&);
     
     FReply ClickedOnButton();
 

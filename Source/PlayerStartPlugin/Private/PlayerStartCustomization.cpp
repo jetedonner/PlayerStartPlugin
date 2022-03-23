@@ -95,7 +95,6 @@ void FPlayerStartCustomization::OnNewActorsDropped(const TArray<UObject*>&, cons
     TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
     GLog->Log("Actor ADDED - CUSTOMIZATION!");
     this->ReloadPlayerStarts();
-//    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
     
     FString PlayerStartTagSetting;
     PlayerStartProperty->GetValue(PlayerStartTagSetting);
@@ -107,7 +106,6 @@ void FPlayerStartCustomization::OnNewActorsDropped(const TArray<UObject*>&, cons
         if(FSItem.Equals(*SelPlayerStart, ESearchCase::CaseSensitive))
         {
             UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s - ADD"), *PlayerStartTagSetting);
-//            CurrentPlayerStartSharedRef = item;
             PlayerStartComboBox->SetSelectedItem(item);
             break;
         }

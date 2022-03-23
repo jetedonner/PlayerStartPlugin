@@ -3,18 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "IDetailCustomization.h"
 #include "Input/Reply.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "Editor/EditorEngine.h"
-#include "Engine/Engine.h"
-#include "LevelEditor.h"
-#include "Editor.h"
-#include "SlateBasics.h"
 #include "Widgets/Input/STextComboBox.h"
 #include "PSWorldSettingsBase.h"
-#include "IDetailCustomization.h"
 
 class FPlayerStartCustomization: public IDetailCustomization
 {
@@ -36,7 +32,8 @@ public:
     
     void OnPlayerStartChanged(TSharedPtr<FString> NewValue, ESelectInfo::Type SelectInfo);
     void OnNewActorsDropped(const TArray<UObject*>&, const TArray<AActor*>&);
+    FReply ClickedOnButton();
     
     void ReloadPlayerStarts();
-    FReply ClickedOnButton();  
+    
 };

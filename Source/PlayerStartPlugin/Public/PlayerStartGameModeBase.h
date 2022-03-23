@@ -8,12 +8,12 @@
 #include "PlayerStartGameModeBase.generated.h"
 
 /**
- * 
+ 
  */
 UCLASS()
 class PLAYERSTARTPLUGIN_API APlayerStartGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-    AActor* ChoosePlayerStart_Implenentation(AController* Player);
+    virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 };

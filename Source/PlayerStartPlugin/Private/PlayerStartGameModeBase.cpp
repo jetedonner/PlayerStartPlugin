@@ -3,64 +3,58 @@
 
 #include "PlayerStartGameModeBase.h"
 
-AActor* APlayerStartGameModeBase::ChoosePlayerStart_Implenentation(AController* Player)
+AActor* APlayerStartGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 {
-    GLog->Log("ChoosePlayerStart_Implenentation => FIRST CALL");
+    GLog->Log("ChoosePlayerStart_Implementation => FIRST CALL");
     if(Player)
     {
-        UWorld* World = Player->GetPawn()->GetWorld();
-        if(World)
+        if(Player->GetWorld())
         {
+            UWorld* World = Player->GetWorld();
             
-            APSWorldSettingsBase* PlayerStartWorldSettings = Cast<APSWorldSettingsBase>(World->GetWorldSettings());
-            
-            if(PlayerStartWorldSettings)
+            if(World)
             {
-                if (GEngine)
+                APSWorldSettingsBase* PlayerStartWorldSettings = Cast<APSWorldSettingsBase>(World->GetWorldSettings());
+                
+                if(PlayerStartWorldSettings)
                 {
-                    GLog->Log("ChoosePlayerStart_Implenentation!");
+                    GLog->Log("ChoosePlayerStart_Implementation!");
 
-                    if (GEditor)
+                    TArray<AActor*> ActorsToFind;
+                    UGameplayStatics::GetAllActorsOfClass(World, APlayerStart::StaticClass(), ActorsToFind);
+                    
+                    for (AActor* PlayerStartActor: ActorsToFind)
                     {
-                        TArray<AActor*> ActorsToFind;
-                        
-//                        if(UWorld* World = GEditor->GetEditorWorldContext().World())
-//                        {
-                            UGameplayStatics::GetAllActorsOfClass(GEditor->GetEditorWorldContext().World(), APlayerStart::StaticClass(), ActorsToFind);
+                        APlayerStart* PlayerStartCast = Cast<APlayerStart>(PlayerStartActor);
+                        if (PlayerStartCast)
+                        {
+                            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found %s"), *PlayerStartCast->GetActorLabel());
                             
-                            for (AActor* PlayerStartActor: ActorsToFind)
+                            TSharedPtr<FString> PlayerStartSharedRef = MakeShared<FString>(FString(PlayerStartCast->GetActorLabel()));
+                            
+                            FString PlayerStartTagSetting = PlayerStartWorldSettings->DefaultPlayerStartTag;
+                            
+                            if(PlayerStartTagSetting.Equals(FString(PlayerStartCast->GetActorLabel())))
                             {
-                                APlayerStart* PlayerStartCast = Cast<APlayerStart>(PlayerStartActor);
-                                if (PlayerStartCast)
-                                {
-                                    UE_LOG(LogTemp, Log, TEXT("PlayerStart Found %s"), *PlayerStartCast->GetActorLabel());
-                                    
-                                    TSharedPtr<FString> PlayerStartSharedRef = MakeShared<FString>(FString(PlayerStartCast->GetActorLabel()));
-                                    
-                                    FString PlayerStartTagSetting = PlayerStartWorldSettings->DefaultPlayerStartTag;
-//                                    PlayerStartProperty->GetValue(PlayerStartTagSetting);
-                                    
-                                    if(PlayerStartTagSetting.Equals(FString(PlayerStartCast->GetActorLabel())))
-                                    {
-                                        UE_LOG(LogTemp, Log, TEXT("ChoosePlayerStart_Implenentation => PlayerStart Found %s"), *PlayerStartCast->GetActorLabel());
-                                        return PlayerStartCast;
-//                                        GEditor->MoveViewportCamerasToActor(*PlayerStartCast, true);
-//                                        break;
-                                    }
-                                }
+                                UE_LOG(LogTemp, Log, TEXT("ChoosePlayerStart_Implementation => PlayerStart Found %s"), *PlayerStartCast->GetActorLabel());
+                                return PlayerStartCast;
                             }
-//                        }
+                        }
                     }
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Log, TEXT("APlayerStartGameModeBase::ChoosePlayerStart_Implenentation => PlayerStartWorldSettings IS NULL (Couldnt be casted)!"));
                 }
             }
             else
             {
-                UE_LOG(LogTemp, Log, TEXT("APlayerStartGameModeBase::ChoosePlayerStart_Implenentation => PlayerStartWorldSettings IS NULL (Couldnt be casted)!"));
+                UE_LOG(LogTemp, Log, TEXT("APlayerStartGameModeBase::ChoosePlayerStart_Implenentation => World IS NULL!"));
             }
         }
         else
         {
-            UE_LOG(LogTemp, Log, TEXT("APlayerStartGameModeBase::ChoosePlayerStart_Implenentation => World IS NULL!"));
+            GLog->Log("ChoosePlayerStart_Implementation => GetWorld() IS NULL");
         }
     }
     else

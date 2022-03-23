@@ -3,7 +3,13 @@ The PlayerStartPlugin lets you easily setup, manage and activate different Playe
 
 ## Description 
 
+### Plugin structure / Modules
+1. PlayerStartPlugin
+2. PSWorldSettings
+
 ## Installation and setup 
+1. Download from Marketplace
+2. Enable Plugin
 
 ## Implementation 
 

@@ -3,8 +3,7 @@ The PlayerStartPlugin lets you easily setup, manage and activate different Playe
 
 ## Description 
 
-01001
-+241. PlayerStartPlugin
+1. PlayerStartPlugin
 2. PSWorldSettings
 
 ## Installation and setup 

@@ -22,3 +22,4 @@ This module contains all the Editor customization needed for selecting and using
 ## Implementation 
 
 ## Credits
+- [Start icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/start)

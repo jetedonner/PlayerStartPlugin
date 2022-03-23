@@ -13,7 +13,7 @@
 #include "Editor.h"
 #include "SlateBasics.h"
 #include "Widgets/Input/STextComboBox.h"
-#include "PlayerStartWorldSettings.h"
+#include "PSWorldSettingsBase.h"
 #include "IDetailCustomization.h"
 
 class FPlayerStartCustomization: public IDetailCustomization
@@ -25,27 +25,18 @@ private:
     
 public:
     
+    TArray<TSharedPtr<FString>> ComboBoxOptions;
+    TSharedPtr<IPropertyHandle> PlayerStartProperty;
+    TSharedPtr<STextComboBox> PlayerStartComboBox;
+    
+    static TSharedRef<IDetailCustomization> MakeInstance();
+    
     // IDetailCustomization interface
     virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
     
-    void InitializeWidgets();
-    
     void OnPlayerStartChanged(TSharedPtr<FString> NewValue, ESelectInfo::Type SelectInfo);
-    
-    void ReloadPlayerStarts();
-    
-    void OnLevelActorAdded(AActor* AddedActor);
-    void OnLevelActorDeleted(AActor* DeletedActor);
     void OnNewActorsDropped(const TArray<UObject*>&, const TArray<AActor*>&);
     
-    FReply ClickedOnButton();
-
-    static TSharedRef<IDetailCustomization> MakeInstance();
-    
-    TArray<TSharedPtr<FString>> ComboBoxOptions;
-    
-    TSharedPtr<IPropertyHandle> PlayerStartProperty;
-    
-    TSharedPtr<STextComboBox> PlayerStartComboBox;
-    
+    void ReloadPlayerStarts();
+    FReply ClickedOnButton();  
 };

@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/WorldSettings.h"
-#include "PlayerStartWorldSettings.generated.h"
+#include "PSWorldSettingsBase.generated.h"
 
 UCLASS()
-class PLAYERSTARTPLUGIN_API APlayerStartWorldSettings : public AWorldSettings
+class PSWORLDSETTINGS_API APSWorldSettingsBase : public AWorldSettings
 {
     GENERATED_BODY()
     
 public:
-    APlayerStartWorldSettings();
+    APSWorldSettingsBase();
     
 protected:
     virtual void BeginPlay() override;

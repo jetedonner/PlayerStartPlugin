@@ -12,7 +12,10 @@ void FPlayerStartPluginModule::StartupModule()
     FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
     
     //Register the custom details panel we have created
-    PropertyModule.RegisterCustomClassLayout(APlayerStartWorldSettings::StaticClass()->GetFName(), FOnGetDetailCustomizationInstance::CreateStatic(&FPlayerStartCustomization::MakeInstance));
+    PropertyModule.RegisterCustomClassLayout(APSWorldSettingsBase::StaticClass()->GetFName(), FOnGetDetailCustomizationInstance::CreateStatic(&FPlayerStartCustomization::MakeInstance));
+    
+//    GetModuleChecked
+    PropertyModule.NotifyCustomizationModuleChanged();
 }
 
 void FPlayerStartPluginModule::ShutdownModule()
@@ -24,7 +27,9 @@ void FPlayerStartPluginModule::ShutdownModule()
     {
         auto& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 
-        PropertyModule.UnregisterCustomClassLayout(APlayerStartWorldSettings::StaticClass()->GetFName());
+        PropertyModule.UnregisterCustomClassLayout(APSWorldSettingsBase::StaticClass()->GetFName());
+        
+        PropertyModule.NotifyCustomizationModuleChanged();
     }
 }
 

@@ -5,14 +5,14 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 #include "Engine/Engine.h"
-#include "PSWorldSettingsBase.h"
-#include "PlayerStartCustomization.h"
+#include "GlobalDefinitions.h"
 
-class FPlayerStartPluginModule : public IModuleInterface
+class FPSWorldSettingsModule : public IModuleInterface
 {
 public:
-    
+
     /* IModuleInterface implementation */
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
+
 };

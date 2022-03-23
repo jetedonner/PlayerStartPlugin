@@ -1,7 +1,5 @@
 // Copyright (c.) 2022 kimhauser.ch, DaVe Inc. (Kim David Hauser) - All rights reserved.
 
-
-//#include "PlayerStartCustomization.h"
 #include "PlayerStartCustomization.h"
 #include "IDetailsView.h"
 #include "DetailLayoutBuilder.h"
@@ -11,7 +9,6 @@
 #include "Widgets/Text/STextBlock.h"
 #include "Widgets/Input/SButton.h"
 #include "Widgets/SBoxPanel.h"
-//#include "Widgets/SAssetPickerButton.h"
 #include "Internationalization/Text.h"
 #include "UObject/Class.h"
  
@@ -28,7 +25,7 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
     //Store the currently selected objects from the viewport to the SelectedObjects array.
     DetailBuilder.GetObjectsBeingCustomized(SelectedObjects);
     
-    PlayerStartProperty = DetailBuilder.GetProperty(GET_MEMBER_NAME_CHECKED(APlayerStartWorldSettings, DefaultPlayerStartTag), APlayerStartWorldSettings::StaticClass());
+    PlayerStartProperty = DetailBuilder.GetProperty(GET_MEMBER_NAME_CHECKED(APSWorldSettingsBase, DefaultPlayerStartTag), APSWorldSettingsBase::StaticClass());
     
     DetailBuilder.HideProperty(PlayerStartProperty);
     
@@ -59,7 +56,6 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
         .VAlign(VAlign_Center)
         .MaxDesiredWidth(250)
         [
-            //SNew(STextComboBox)
             SAssignNew(PlayerStartComboBox, STextComboBox)
             .Font(IDetailLayoutBuilder::GetDetailFont())
             .OptionsSource(&ComboBoxOptions)
@@ -70,12 +66,8 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
     
     
     CustomCategory.AddCustomRow(FText::FromString("Goto actor in level"))
-//        .NameContent()
-//        [
-//            SNew(SAssetPickerButton)
-//        ]
         .ValueContent()
-        .VAlign(VAlign_Center) // set vertical alignment to center
+        .VAlign(VAlign_Center)
         .MaxDesiredWidth(250)
         [
             SNew(SButton)
@@ -91,81 +83,9 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
     if (GEngine)
     {
         UE_LOG(LogTemp, Log, TEXT("Setting up Actor-Delagates"));
-        GEngine->OnLevelActorAdded().AddRaw(this, &FPlayerStartCustomization::OnLevelActorAdded);
-        
-        GEngine->OnLevelActorDeleted().AddRaw(this, &FPlayerStartCustomization::OnLevelActorDeleted);
         
         FDelegateHandle Handle = FEditorDelegates::OnNewActorsDropped.AddRaw(this, &FPlayerStartCustomization::OnNewActorsDropped);
     }
-    
-//    if (GEditor)
-//    {
-//        GEditor->OnNewActorsDropped.AddDynamic(this, &FPlayerStartCustomization::OnNewActorsDropped);
-//    }
-}
-
-BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION;
-void FPlayerStartCustomization::InitializeWidgets()
-{
-//    check(FAsyncCompiler::Get() != nullptr);
-    // Create the core list
-//    const auto& cores = FAsyncCompiler::Get()->GetCores();
-//    check(cores.Num() > 0);
-//    for (const auto& core : cores)
-//    {
-//        CoreNames.Add(MakeShareable(new FString(core->GetName())));
-//    }
-//    SelectedCore = &cores[0].Get();
-//    UpdateRevisionList();
-}
-END_SLATE_FUNCTION_BUILD_OPTIMIZATION;
-
-void FPlayerStartCustomization::OnLevelActorAdded(AActor* AddedActor)
-{
-//    TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
-//    GLog->Log("Actor ADDED - CUSTOMIZATION!");
-//    this->ReloadPlayerStarts();
-////    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
-//
-//    FString PlayerStartTagSetting;
-//    PlayerStartProperty->GetValue(PlayerStartTagSetting);
-//
-//    TSharedPtr<FString> CurrentPlayerStartSharedRef;
-//    for(TSharedPtr<FString> item : ComboBoxOptions)
-//    {
-//        FString FSItem = *item;
-//        if(FSItem.Equals(*SelPlayerStart, ESearchCase::CaseSensitive))
-//        {
-//            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s - ADD"), *PlayerStartTagSetting);
-////            CurrentPlayerStartSharedRef = item;
-//            PlayerStartComboBox->SetSelectedItem(item);
-//            break;
-//        }
-//    }
-}
-
-void FPlayerStartCustomization::OnLevelActorDeleted(AActor* DeletedActor)
-{
-//    TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
-//    GLog->Log("Actor DELETED - CUSTOMIZATION!");
-//    this->ReloadPlayerStarts();
-////    PlayerStartComboBox->SetSelectedItem(SelPlayerStart);
-//
-//    FString PlayerStartTagSetting;
-//    PlayerStartProperty->GetValue(PlayerStartTagSetting);
-//
-//    TSharedPtr<FString> CurrentPlayerStartSharedRef;
-//    for(TSharedPtr<FString> item : ComboBoxOptions)
-//    {
-//        FString FSItem = *item;
-//        if(FSItem.Equals(*SelPlayerStart, ESearchCase::CaseSensitive))
-//        {
-//            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s - ADD"), *PlayerStartTagSetting);
-////            CurrentPlayerStartSharedRef = item;
-//            PlayerStartComboBox->SetSelectedItem(item);
-//            break;
-//        }
-//    }
 }
 
 void FPlayerStartCustomization::OnNewActorsDropped(const TArray<UObject*>&, const TArray<AActor*>&)

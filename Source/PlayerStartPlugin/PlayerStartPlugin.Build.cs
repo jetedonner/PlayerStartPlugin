@@ -32,7 +32,8 @@ public class PlayerStartPlugin : ModuleRules
                 "UMG",
                 "UnrealEd",
                 "PropertyEditor",
-                "EditorStyle"
+                "EditorStyle",
+                "PSWorldSettings"
 			}
 			);
 			
@@ -45,7 +46,8 @@ public class PlayerStartPlugin : ModuleRules
                 "Slate",
                 "SlateCore",
                 "PropertyEditor",
-                "EditorStyle"
+                "EditorStyle",
+                "PSWorldSettings"
 			}
 			);
 		

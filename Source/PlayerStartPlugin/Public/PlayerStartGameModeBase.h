@@ -1,4 +1,10 @@
-// Copyright (c.) 1991 - 2022 kimhauser.ch, DaVe Inc. All rights reserved.
+//
+//  PlayerStartGameModeBase.h
+//  UE4_PlayerStartDemo
+//
+//  Created by Kim David Hauser on 22.03.22.
+//  Copyright (c.) 2022 kimhauser.ch, DaVe Inc. (Kim David Hauser) - All rights reserved.
+//
 
 #pragma once
 

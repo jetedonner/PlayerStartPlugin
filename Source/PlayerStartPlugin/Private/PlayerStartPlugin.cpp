@@ -12,22 +12,18 @@
 
 void FPlayerStartPluginModule::StartupModule()
 {
-    // Put your module initialization code here
-     UE_LOG(LogTemp, Warning, TEXT("FPlayerStartPluginModule module has started!"));
+     UE_LOG(LogTemp, Log, TEXT("FPlayerStartPluginModule module has started!"));
     
     FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
     
-    //Register the custom details panel we have created
     PropertyModule.RegisterCustomClassLayout(APSWorldSettingsBase::StaticClass()->GetFName(), FOnGetDetailCustomizationInstance::CreateStatic(&FPlayerStartCustomization::MakeInstance));
     
-//    GetModuleChecked
     PropertyModule.NotifyCustomizationModuleChanged();
 }
 
 void FPlayerStartPluginModule::ShutdownModule()
 {
-    // Put your module termination code here
-    UE_LOG(LogTemp, Warning, TEXT("FPlayerStartPluginModule module has shutdown!"));
+    UE_LOG(LogTemp, Log, TEXT("FPlayerStartPluginModule module has shutdown!"));
     
     if(FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
     {

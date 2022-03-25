@@ -12,16 +12,13 @@
 
 void FPSWorldSettingsModule::StartupModule()
 {
-    // Put your module initialization code here
-    UE_LOG(LogTemp, Warning, TEXT("FPSWorldSettingsModule module has started!"));
-
+    UE_LOG(LogTemp, Log, TEXT("FPSWorldSettingsModule module has started!"));
     DAVE_LOG_GENERAL;
 }
 
 void FPSWorldSettingsModule::ShutdownModule()
 {
-    // Put your module termination code here
-    UE_LOG(LogTemp, Warning, TEXT("FPSWorldSettingsModule module has shutdown!"));
+    UE_LOG(LogTemp, Log, TEXT("FPSWorldSettingsModule module has shutdown!"));
 }
 
 #undef LOCTEXT_NAMESPACE

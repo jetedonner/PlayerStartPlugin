@@ -46,7 +46,7 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
         FString FSItem = *item;
         if(FSItem.Equals(PlayerStartTagSetting, ESearchCase::CaseSensitive))
         {
-            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s"), *PlayerStartTagSetting);
+//            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s"), *PlayerStartTagSetting);
             CurrentPlayerStartSharedRef = item;
             break;
         }
@@ -88,39 +88,61 @@ void FPlayerStartCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBui
     
     if (GEngine)
     {
-        UE_LOG(LogTemp, Log, TEXT("Setting up Actor-Delagates"));
-        
+//        UE_LOG(LogTemp, Log, TEXT("Setting up Actor-Delagates"));
         FDelegateHandle Handle = FEditorDelegates::OnNewActorsDropped.AddRaw(this, &FPlayerStartCustomization::OnNewActorsDropped);
+        FDelegateHandle Handle2 = FEditorDelegates::OnDeleteActorsEnd.AddRaw(this, &FPlayerStartCustomization::OnDeleteActorsEnd);
     }
 }
 
 void FPlayerStartCustomization::OnNewActorsDropped(const TArray<UObject*>&, const TArray<AActor*>&)
 {
-    GLog->Log("OnNewActorsDropped - CUSTOMIZATION!");
+//    GLog->Log("OnNewActorsDropped - CUSTOMIZATION!");
     
     TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
-    GLog->Log("Actor ADDED - CUSTOMIZATION!");
+    
     this->ReloadPlayerStarts();
     
+    this->ComboBoxSetToWorldProperty(SelPlayerStart);
+}
+
+void FPlayerStartCustomization::OnDeleteActorsEnd()
+{
+//    GLog->Log("OnDeleteActorsEnd - CUSTOMIZATION!");
+    
+    TSharedPtr<FString> SelPlayerStart = PlayerStartComboBox->GetSelectedItem();
+
+    this->ReloadPlayerStarts();
+    
+    this->ComboBoxSetToWorldProperty(SelPlayerStart);
+}
+
+void FPlayerStartCustomization::ComboBoxSetToWorldProperty(TSharedPtr<FString> SelPlayerStart)
+{
     FString PlayerStartTagSetting;
     PlayerStartProperty->GetValue(PlayerStartTagSetting);
+
+    TSharedPtr<FString> DefaultItem;
     
-    TSharedPtr<FString> CurrentPlayerStartSharedRef;
     for(TSharedPtr<FString> item : ComboBoxOptions)
     {
         FString FSItem = *item;
+        DefaultItem = item;
         if(FSItem.Equals(*SelPlayerStart, ESearchCase::CaseSensitive))
         {
-            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s - ADD"), *PlayerStartTagSetting);
+//            UE_LOG(LogTemp, Log, TEXT("PlayerStart Found and Selected: %s - ADD"), *PlayerStartTagSetting);
             PlayerStartComboBox->SetSelectedItem(item);
-            break;
+            return;
         }
+    }
+    if(DefaultItem)
+    {
+        PlayerStartComboBox->SetSelectedItem(DefaultItem);
     }
 }
 
 void FPlayerStartCustomization::ReloadPlayerStarts()
 {
-    GLog->Log("Reload PlayerStarts!");
+//    GLog->Log("Reload PlayerStarts!");
     
     if(UWorld* World = GEditor->GetEditorWorldContext().World())
     {
@@ -134,11 +156,8 @@ void FPlayerStartCustomization::ReloadPlayerStarts()
             APlayerStart* PlayerStartCast = Cast<APlayerStart>(PlayerStartActor);
             if (PlayerStartCast)
             {
-                UE_LOG(LogTemp, Log, TEXT("PlayerStart Found %s"), *PlayerStartCast->GetActorLabel());
-                
-                TSharedPtr<FString> PlayerStartSharedRef = MakeShared<FString>(FString(PlayerStartCast->GetActorLabel()));
-                
-                ComboBoxOptions.Add(PlayerStartSharedRef);
+//                UE_LOG(LogTemp, Log, TEXT("PlayerStart Found %s"), *PlayerStartCast->GetActorLabel());
+                ComboBoxOptions.Add(MakeShared<FString>(FString(PlayerStartCast->GetActorLabel())));
             }
         }
     }
@@ -150,35 +169,30 @@ void FPlayerStartCustomization::ReloadPlayerStarts()
 
 FReply FPlayerStartCustomization::ClickedOnButton()
 {
-    if (GEngine)
-    {
-        GLog->Log("ViewPortCamera goto actor!");
+//    GLog->Log("ViewPortCamera goto actor!");
 
-        if (GEditor)
+    if (GEditor)
+    {
+        if(UWorld* World = GEditor->GetEditorWorldContext().World())
         {
             TArray<AActor*> ActorsToFind;
+            UGameplayStatics::GetAllActorsOfClass(GEditor->GetEditorWorldContext().World(), APlayerStart::StaticClass(), ActorsToFind);
             
-            if(UWorld* World = GEditor->GetEditorWorldContext().World())
+            for (AActor* PlayerStartActor: ActorsToFind)
             {
-                UGameplayStatics::GetAllActorsOfClass(GEditor->GetEditorWorldContext().World(), APlayerStart::StaticClass(), ActorsToFind);
-                
-                for (AActor* PlayerStartActor: ActorsToFind)
+                APlayerStart* PlayerStartCast = Cast<APlayerStart>(PlayerStartActor);
+                if (PlayerStartCast)
                 {
-                    APlayerStart* PlayerStartCast = Cast<APlayerStart>(PlayerStartActor);
-                    if (PlayerStartCast)
+//                    UE_LOG(LogTemp, Log, TEXT("PlayerStart Found %s"), *PlayerStartCast->GetActorLabel());
+                    TSharedPtr<FString> PlayerStartSharedRef = MakeShared<FString>(FString(PlayerStartCast->GetActorLabel()));
+                    
+                    FString PlayerStartTagSetting;
+                    PlayerStartProperty->GetValue(PlayerStartTagSetting);
+                    
+                    if(PlayerStartTagSetting.Equals(FString(PlayerStartCast->GetActorLabel())))
                     {
-                        UE_LOG(LogTemp, Log, TEXT("PlayerStart Found %s"), *PlayerStartCast->GetActorLabel());
-                        
-                        TSharedPtr<FString> PlayerStartSharedRef = MakeShared<FString>(FString(PlayerStartCast->GetActorLabel()));
-                        
-                        FString PlayerStartTagSetting;
-                        PlayerStartProperty->GetValue(PlayerStartTagSetting);
-                        
-                        if(PlayerStartTagSetting.Equals(FString(PlayerStartCast->GetActorLabel())))
-                        {
-                            GEditor->MoveViewportCamerasToActor(*PlayerStartCast, true);
-                            break;
-                        }
+                        GEditor->MoveViewportCamerasToActor(*PlayerStartCast, true);
+                        break;
                     }
                 }
             }
@@ -191,10 +205,7 @@ void FPlayerStartCustomization::OnPlayerStartChanged(TSharedPtr<FString> NewValu
 {
     if(NewValue)
     {
-        FString FSNewValue = *NewValue;
-        PlayerStartProperty->SetValue(static_cast<FString>(FSNewValue));
-        
-        UE_LOG(LogTemp, Log, TEXT("PlayerStart Selected: %s"), *FSNewValue);
+        PlayerStartProperty->SetValue(static_cast<FString>(*NewValue));
     }
     else
     {

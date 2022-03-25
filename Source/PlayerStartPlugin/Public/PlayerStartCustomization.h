@@ -37,7 +37,12 @@ public:
     virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
     
     void OnPlayerStartChanged(TSharedPtr<FString> NewValue, ESelectInfo::Type SelectInfo);
+    
     void OnNewActorsDropped(const TArray<UObject*>&, const TArray<AActor*>&);
+    void OnDeleteActorsEnd();
+    
+    void ComboBoxSetToWorldProperty(TSharedPtr<FString> SelPlayerStart);
+    
     FReply ClickedOnButton();
     
     void ReloadPlayerStarts();
